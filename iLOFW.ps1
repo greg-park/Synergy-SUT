@@ -1,3 +1,4 @@
+# Added some comments and checked back in to github
 Function CheckQueue {
     $pending = 0
     $ServerInfo = "C:\Users\Gpark\Documents\ServerInfo.csv"
