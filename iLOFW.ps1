@@ -1,7 +1,14 @@
-# Added some comments and checked back in to github
+#
+# ServerInfo.csv structure should be
+#
+# iLO	        HostIP	    iLOUser	iLOPW	    HostUser	HostPW
+# 10.10.198.30	10.10.0.30	hpadmin	atlpresales	root	    HP1nvent!
+# 10.10.198.31	10.10.0.31	hpadmin	atlpresales	root	    HP1nvent!
+#
 Function CheckQueue {
     $pending = 0
-    $ServerInfo = "C:\Users\Gpark\Documents\ServerInfo.csv"
+# Changed to reliative path ...
+    $ServerInfo = ".\ServerInfo.csv"
     if ( -not (Test-path -Path $ServerInfo))
     {
         write-host "No file specified or file does not exist."
@@ -60,6 +67,7 @@ Function CheckQueue {
     }
 }
 
+# this checks SUT on esxi hosts
 Function doSut {
     $startSUT   = @'
 "sut -start > /dev/null 2>&1 &"
@@ -91,6 +99,7 @@ Function doSut {
     # Invoke-Expression $output
 }
 
+# check for Maint Mode on the esxi target hosts.  Don't want to reboot a running box :)
 class test_MM {
 #    [string]$IP
     [int] doMM([string] $IPaddr) {
@@ -126,25 +135,3 @@ class test_MM {
 
 ## Main and Testing
 CheckQueue
-
-# $ServerInfo = "C:\Users\Gpark\Documents\ServerInfo.csv"
-# if ( -not (Test-path -Path $ServerInfo))
-# {
-#     write-host "No file specified or file does not exist."
-#     return
-# }
-# # Read the CSV Users file
-# $tempFile = [IO.Path]::GetTempFileName()
-# Get-Content $ServerInfo | Where-Object { ($_ -notlike ",,,,,,,,*") -and ($_ -notlike '"*') -and ( $_ -notlike "#*") -and ($_ -notlike ",,,#*") } > $tempfile   # Skip blank line
-# $ListofServers = import-csv $tempfile | Sort-Object NetworkSet
-# 
-# ForEach ($srvInfo in $ListofServers ) {
-#     $tc = New-Object -TypeName test_MM
-#     if ( $tc.doMM($srvInfo.HostIP) )  { 
-#         Write-Host $ehost.Name, "In maintenance mode.  Good for FW updates"
-#         # doSut
-#         # Write-Host "iSUT restrated on all hosts"
-#     } else {
-#         Write-Host "Host not in maintenance mode"
-#     }
-# }
